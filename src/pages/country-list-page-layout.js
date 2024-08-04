@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Search from "../component/search";
 import CountryListDisplay from "../component/country-list-display";
+import CountryModal from "../modal/country-modal";
 
 function CountryListDisplayLayout() {
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [countries, setCountries] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOrder, setSortOrder] = useState("asc");
+    const [selectedCountry, setSelectedCountry] = useState(null);
 
     const toggleTheme = () => {
         setIsDarkMode(!isDarkMode);
@@ -32,6 +34,18 @@ function CountryListDisplayLayout() {
 
     const handleSort = (order) => {
         setSortOrder(order);
+    };
+
+    const handleCountryClick = (country) => {
+        if (country && country.name && country.name.official) {
+            setSelectedCountry(country);
+        } else {
+            console.error("Country name or official name is undefined", country);
+        }
+    };
+
+    const handleCloseModal = () => {
+        setSelectedCountry(null);
     };
 
     return (
@@ -64,10 +78,18 @@ function CountryListDisplayLayout() {
                             searchTerm={searchTerm}
                             sortOrder={sortOrder}
                             isDarkMode={isDarkMode}
+                            onCountryClick={handleCountryClick}
                         />
                     </div>
                 </section>
             </main>
+            {selectedCountry && (
+                <CountryModal
+                    country={selectedCountry}
+                    onClose={handleCloseModal}
+                    isDarkMode={isDarkMode}
+                />
+            )}
         </div>
     );
 }
