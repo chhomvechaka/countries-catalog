@@ -14,7 +14,7 @@ function CountryModal({ country, onClose, isDarkMode }) {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                     </svg>
                 </button>
-                <h2 className="text-2xl font-bold mb-4">{country.name?.official || "N/A"}</h2>
+                <h2 className="text-2xl font-bold mb-4 break-words">{country.name?.official || "N/A"}</h2>
                 <div className="flex justify-center mb-4">
                     <img src={country.flags?.png} alt={`Flag of ${country.name?.official}`} className="w-65 h-auto rounded" />
                 </div>
