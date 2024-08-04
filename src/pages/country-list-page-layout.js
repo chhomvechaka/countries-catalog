@@ -4,37 +4,30 @@ import CountryListDisplay from "../component/country-list-display";
 import CountryModal from "../modal/country-modal";
 import Footer from "../component/footer"; // Adjust the import path as needed
 import LoadingScreen from "../component/loading-screen"; // Adjust the import path as needed
-import Fuse from "fuse.js";
 
 function CountryListDisplayLayout() {
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [countries, setCountries] = useState([]);
-    const [filteredCountries, setFilteredCountries] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOrder, setSortOrder] = useState("asc");
     const [selectedCountry, setSelectedCountry] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-
-    const fuse = new Fuse(countries, {
-        keys: ["name.common", "name.official", "altSpellings"],
-        threshold: 0.3,
-    });
+    const [isLoading, setIsLoading] = useState(true); // Add loading state
+    const [currentPage, setCurrentPage] = useState(1); // Add current page state
 
     const toggleTheme = () => {
         setIsDarkMode(!isDarkMode);
     };
 
     const fetchCountries = async () => {
-        setIsLoading(true);
+        setIsLoading(true); // Set loading to true before fetching data
         try {
             const response = await fetch("https://restcountries.com/v3.1/all");
             const data = await response.json();
             setCountries(data);
-            setFilteredCountries(data);
         } catch (error) {
             console.error("Error fetching countries:", error);
         } finally {
-            setIsLoading(false);
+            setIsLoading(false); // Set loading to false after data is fetched
         }
     };
 
@@ -44,24 +37,12 @@ function CountryListDisplayLayout() {
 
     const handleSearch = (term) => {
         setSearchTerm(term);
-        if (term === "") {
-            setFilteredCountries(countries);
-        } else {
-            const result = fuse.search(term).map(({ item }) => item);
-            setFilteredCountries(result);
-        }
+        setCurrentPage(1); // Reset to the first page on new search
     };
 
     const handleSort = (order) => {
         setSortOrder(order);
-        const sortedCountries = [...filteredCountries].sort((a, b) => {
-            if (order === "asc") {
-                return a.name.official.localeCompare(b.name.official);
-            } else {
-                return b.name.official.localeCompare(a.name.official);
-            }
-        });
-        setFilteredCountries(sortedCountries);
+        setCurrentPage(1); // Reset to the first page on new sort order
     };
 
     const handleCountryClick = (country) => {
@@ -105,11 +86,13 @@ function CountryListDisplayLayout() {
                         </div>
                         <div className={`p-6 rounded-lg shadow-lg ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
                             <CountryListDisplay
-                                countries={filteredCountries}
+                                countries={countries}
                                 searchTerm={searchTerm}
                                 sortOrder={sortOrder}
                                 isDarkMode={isDarkMode}
                                 onCountryClick={handleCountryClick}
+                                currentPage={currentPage}
+                                setCurrentPage={setCurrentPage} // Pass setCurrentPage as prop
                             />
                         </div>
                     </section>

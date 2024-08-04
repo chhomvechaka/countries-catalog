@@ -1,22 +1,24 @@
 import React, { useState } from "react";
+import Fuse from "fuse.js";
 import CountryCard from "./country-card";
 
 const ITEMS_PER_PAGE = 25;
 
-function CountryListDisplay({ countries, searchTerm, sortOrder, isDarkMode, onCountryClick }) {
-    const [currentPage, setCurrentPage] = useState(1);
+function CountryListDisplay({ countries, searchTerm, sortOrder, isDarkMode, onCountryClick, currentPage, setCurrentPage }) {
+    const fuse = new Fuse(countries, {
+        keys: ["name.official", "name.common", "altSpellings", "cca2", "cca3", "translations", "nativeName"],
+        threshold: 0.3
+    });
 
-    const filteredCountries = countries
-        .filter(country =>
-            country.name?.official.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-        .sort((a, b) => {
-            if (sortOrder === "asc") {
-                return a.name.official.localeCompare(b.name.official);
-            } else {
-                return b.name.official.localeCompare(a.name.official);
-            }
-        });
+    const filteredCountries = searchTerm ? fuse.search(searchTerm).map(result => result.item) : countries;
+
+    filteredCountries.sort((a, b) => {
+        if (sortOrder === "asc") {
+            return a.name.official.localeCompare(b.name.official);
+        } else {
+            return b.name.official.localeCompare(a.name.official);
+        }
+    });
 
     const totalPages = Math.ceil(filteredCountries.length / ITEMS_PER_PAGE);
     const paginatedCountries = filteredCountries.slice(
@@ -34,7 +36,7 @@ function CountryListDisplay({ countries, searchTerm, sortOrder, isDarkMode, onCo
 
     return (
         <div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
                 {paginatedCountries.map((country) => (
                     <CountryCard
                         key={country.cca3}
