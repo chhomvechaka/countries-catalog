@@ -60,7 +60,7 @@ function CountryListDisplay({ countries, searchTerm, sortOrder, isDarkMode }) {
             ) : (
                 <div className="flex justify-center items-center p-4">
                     <p className={`text-lg ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                        No countries match your search
+                        No countries match your search criteria.
                     </p>
                 </div>
             )}

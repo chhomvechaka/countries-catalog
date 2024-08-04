@@ -7,7 +7,7 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/page" element={<CountryListDisplayLayout />} />
+                <Route path="/" element={<CountryListDisplayLayout />} />
             </Routes>
         </BrowserRouter>
     );

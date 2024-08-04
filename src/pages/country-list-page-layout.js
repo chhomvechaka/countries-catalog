@@ -56,7 +56,7 @@ function CountryListDisplayLayout() {
             <main className="flex flex-1 flex-col items-center">
                 <section className="w-full p-4">
                     <div className="mb-4 flex justify-center">
-                        <Search onSearch={handleSearch} onSort={handleSort} />
+                        <Search onSearch={handleSearch} onSort={handleSort} isDarkMode={isDarkMode} />
                     </div>
                     <div className={`p-6 rounded-lg shadow-lg ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
                         <CountryListDisplay

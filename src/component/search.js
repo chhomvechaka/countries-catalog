@@ -13,6 +13,11 @@ function Search({ onSearch, onSort, isDarkMode }) {
         setIsDropdownOpen(false);
     };
 
+    const clearSearch = () => {
+        setSearchTerm("");
+        onSearch("");
+    };
+
     return (
         <div className="flex justify-center items-center p-4">
             <input
@@ -26,9 +31,9 @@ function Search({ onSearch, onSort, isDarkMode }) {
             />
             <button
                 className="bg-orange-500 text-white px-4 py-2 ml-6 rounded-lg shadow-sm hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                onClick={() => onSearch(searchTerm)}
+                onClick={clearSearch}
             >
-                Search
+                Clear
             </button>
             <div className="relative ml-6">
                 <button
