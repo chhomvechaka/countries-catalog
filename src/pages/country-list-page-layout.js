@@ -3,6 +3,7 @@ import Search from "../component/search";
 import CountryListDisplay from "../component/country-list-display";
 import CountryModal from "../modal/country-modal";
 import Footer from "../component/footer"; // Adjust the import path as needed
+import LoadingScreen from "../component/loading-screen"; // Adjust the import path as needed
 
 function CountryListDisplayLayout() {
     const [isDarkMode, setIsDarkMode] = useState(false);
@@ -10,18 +11,22 @@ function CountryListDisplayLayout() {
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOrder, setSortOrder] = useState("asc");
     const [selectedCountry, setSelectedCountry] = useState(null);
+    const [isLoading, setIsLoading] = useState(true); // Add loading state
 
     const toggleTheme = () => {
         setIsDarkMode(!isDarkMode);
     };
 
     const fetchCountries = async () => {
+        setIsLoading(true); // Set loading to true before fetching data
         try {
             const response = await fetch("https://restcountries.com/v3.1/all");
             const data = await response.json();
             setCountries(data);
         } catch (error) {
             console.error("Error fetching countries:", error);
+        } finally {
+            setIsLoading(false); // Set loading to false after data is fetched
         }
     };
 
@@ -50,7 +55,7 @@ function CountryListDisplayLayout() {
     };
 
     return (
-        <div className={`min-h-screen ${isDarkMode ? 'bg-black text-white' : 'bg-gray-100 text-black'} flex flex-col`}>
+        <div className={`min-h-screen ${isDarkMode ? 'bg-black text-white' : 'bg-gray-100 text-black'} flex flex-col font-sans`}>
             <header className={`${isDarkMode ? 'bg-gray-800 text-white' : 'bg-orange-500 text-white'} p-4 flex justify-between items-center`}>
                 <h1 className="text-3xl font-bold">Countries Catalog</h1>
                 <button
@@ -69,20 +74,24 @@ function CountryListDisplayLayout() {
                 </button>
             </header>
             <main className="flex flex-1 flex-col items-center">
-                <section className="w-full p-4">
-                    <div className="mb-4 flex justify-center">
-                        <Search onSearch={handleSearch} onSort={handleSort} isDarkMode={isDarkMode} />
-                    </div>
-                    <div className={`p-6 rounded-lg shadow-lg ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                        <CountryListDisplay
-                            countries={countries}
-                            searchTerm={searchTerm}
-                            sortOrder={sortOrder}
-                            isDarkMode={isDarkMode}
-                            onCountryClick={handleCountryClick}
-                        />
-                    </div>
-                </section>
+                {isLoading ? ( // Show loading screen if data is being fetched
+                    <LoadingScreen />
+                ) : (
+                    <section className="w-full p-4">
+                        <div className="mb-4 flex justify-center">
+                            <Search onSearch={handleSearch} onSort={handleSort} isDarkMode={isDarkMode} />
+                        </div>
+                        <div className={`p-6 rounded-lg shadow-lg ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+                            <CountryListDisplay
+                                countries={countries}
+                                searchTerm={searchTerm}
+                                sortOrder={sortOrder}
+                                isDarkMode={isDarkMode}
+                                onCountryClick={handleCountryClick}
+                            />
+                        </div>
+                    </section>
+                )}
             </main>
             {selectedCountry && (
                 <CountryModal
