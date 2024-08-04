@@ -9,7 +9,7 @@ function CountryModal({ country, onClose, isDarkMode }) {
     return (
         <div className={`fixed inset-0 flex p-6 justify-center items-center ${isDarkMode ? 'bg-gray-900 bg-opacity-75' : 'bg-gray-700 bg-opacity-50'} overflow-y-auto`}>
             <div className={`relative p-6 rounded-lg shadow-lg w-full max-w-3xl ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'} max-h-full overflow-y-auto font-sans`}>
-                <button className="absolute top-0 right-0 m-4 text-gray-700 hover:text-red-500" onClick={onClose}>
+                <button className="absolute top-2 right-2 m-4 text-gray-700 hover:text-red-500" onClick={onClose}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                     </svg>
