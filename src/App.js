@@ -9,7 +9,7 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<CountryListDisplayLayout />} />
+                <Route path="/countries-catalog" element={<CountryListDisplayLayout />} />
             </Routes>
         </BrowserRouter>
     );
